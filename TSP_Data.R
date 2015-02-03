@@ -1,5 +1,5 @@
 
-TSP_DATA_FILE <- '~/Dropbox/Development/LearningR/Economy/TSPshareprices.csv'
+TSP_DATA_FILE <- './resources/TSPshareprices.csv'
 
 
 TSPSharePrices <- read.csv(file=TSP_DATA_FILE,head=TRUE,sep=",")
