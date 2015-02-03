@@ -1,0 +1,45 @@
+BLS API Key: 9ec4fb8261624813883cc86a80847310
+
+Series Id:           LNS14000000
+Seasonally Adjusted
+Series title:        (Seas) Unemployment Rate
+Labor force status:  Unemployment rate
+Type of data:        Percent or rate
+Age:                 16 years and over
+
+curl -v -i -X GET http://api.bls.gov/publicAPI/v2/timeseries/data/LNS14000000
+
+
+curl -i -X POST -H 'Content-Type: application/json' -d '{"seriesid":["LNS14000000"],"startyear":"2002", "endyear":"2012"}' http://api.bls.gov/publicAPI/v2/timeseries/data/
+
+curl -v -i -X POST -H 'Content-Type: application/json' -d '{"seriesid":["LNS14000000"],"startyear":"2002", "endyear":"2012"}' http://api.bls.gov/publicAPI/v2/timeseries/data/
+
+curl —v i -X POST -H 'Content-Type: application/json' -d '{"seriesid":["LNS14000000"], "startyear":"2002", "endyear":"2012"}' http://api.bls.gov/publicAPI/v2/timeseries/data/
+
+
+#Capturing the basic data
+unemploymentURL = "http://api.bls.gov/publicAPI/v2/timeseries/data/LNS14000000"
+download.file(unemploymentURL, "./unemployment.json", method="curl")
+
+unemploymentData <- fromJSON("./unemployment.json")
+unemploymentData <- unemploymentData$Results$series[2][1,1]
+
+#Converting these JSON messages to usable Lists: 
+# The list of dataFrames
+unemploymentData[[1]] 
+
+# Just the first three rows
+unemploymentData[[1]][1:3,]
+
+# The year, month and rate columns of each row
+unemploymentData[c("year", "period", "value")]
+
+# reversing the order of the list - No idea how this scales!
+ unemploymentData[rev(seq_len(nrow(unempL))), ]
+
+
+#show it on a graph
+plot(rUnempL$value, type="o", ann=FALSE)
+title(ylab="Unemployment Rate")
+
+
