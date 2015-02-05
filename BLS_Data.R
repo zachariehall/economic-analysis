@@ -3,11 +3,11 @@
 #install.packages("httr")
 
 #load
-library(jsonlite)
-library(httr)
-library(RCurl)
+require(jsonlite)
+require(httr)
+require(RCurl)
 
-START_YEAR <- '2000'
+START_YEAR <- '2006'
 END_YEAR <- '2014'
 UNEMPLOYMENT_SERIES_ID <- c('LNS14000000')
 BLS_API_KEY <- '9ec4fb8261624813883cc86a80847310'
@@ -69,5 +69,4 @@ axis(2, las=1)
 abline(v=unEmploymentSorted$date[qrtMonths], col='grey', lwd=0.5)
 
 box()
-
 
