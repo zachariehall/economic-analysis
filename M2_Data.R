@@ -15,8 +15,10 @@ M2_DATA_FILE <- './resources/FRB_H6.csv'
 moneySupplyData <- read.csv(file=M2_DATA_FILE, head=TRUE, sep=",", skip = 1)
 moneySupplyData$Time.Period <- as.Date(moneySupplyData$Time.Period, "%Y-%m-%d")
 
-plot(x=moneySupplyData$Time.Period, y=moneySupplyData$M2_N.WM, 
-     main="Money Supply (M2)", type="l", ylab="Money Supply ($1e+09)", 
-     xlab='Date', col='black')
+plot(x=moneySupplyData$Time.Period, y=moneySupplyData$M2.WM, 
+     main="Seasonally Adjusted Money Supply (M2)", type="l", ylab="Money ($1e+09)", 
+     xlab='Date', ylim = c(0,1.1*max(moneySupplyData$M2.WM)), col='black')
 
+#The non-seasonally adjusted money supply
+#points(x=moneySupplyData$Time.Period, y=moneySupplyData$M2_N.WM, col='red', type='l', lwd=2)
 
