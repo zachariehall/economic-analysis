@@ -25,11 +25,11 @@ datesOfInterest <- as.Date(seq(as.Date("2010-01-01"), length=24, by="1 month") -
 
 ####### GENERATING TSP RETURNS ######
 
-# Use the last day of the TSP Share Prices data as the end time for analysis 
+# Use the current date (effectively the last day of the TSP Share Prices data) as the end time for analysis 
 endTime <- Sys.Date()
 
 # Can confirm this works properly by manually setting the date to the end of Jan and comparing the 30 day returns
-# to what is reported for Jan 2015 the TSP site https://www.tsp.gov/investmentfunds/returns/returnSummary.shtml
+# to what is reported for Jan 2015 on the TSP site https://www.tsp.gov/investmentfunds/returns/returnSummary.shtml
 #endTime <- as.Date("2015-01-31")
 
 # Dates to represent 30, 60, 90 days from the end Time. 
