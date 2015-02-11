@@ -12,7 +12,7 @@ TSPSharePrices <- read.csv(file=TSP_DATA_FILE,head=TRUE,sep=",")
 TSPSharePrices$date <- as.Date(TSPSharePrices$date, "%Y-%m-%d")
 
 plot(x=TSPSharePrices$date, y=TSPSharePrices$S.Fund, ylim=c(0,1.1*max(TSPSharePrices$S.Fund)),
-      type="l", ann=TRUE, xlab='Date', col='black')
+      type="l", ann=FALSE, xlab='Date', col='black')
 points(x=TSPSharePrices$date, y=TSPSharePrices$C.Fund, col='blue', type='l', lwd=2)
 points(x=TSPSharePrices$date, y=TSPSharePrices$G.Fund, col='purple', type='l', lwd=2)
 points(x=TSPSharePrices$date, y=TSPSharePrices$L.2050, col='red', type='l', lwd=2)
