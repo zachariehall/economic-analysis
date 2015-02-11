@@ -15,6 +15,13 @@ M2_DATA_FILE <- './resources/FRB_H6.csv'
 moneySupplyData <- read.csv(file=M2_DATA_FILE, head=TRUE, sep=",", skip = 1)
 moneySupplyData$Time.Period <- as.Date(moneySupplyData$Time.Period, "%Y-%m-%d")
 
+#Need to convert to POSIX - This can probably be done in the last step. 
+moneySupplyData$Time.Period <- as.POSIXlt(moneySupplyData$Time.Period)
+
+#plot(x=moneySupplyData$Time.Period, y=moneySupplyData$M2_N.WM, 
+#     main="Non-Seasonally Adjusted Money Supply (M2)", type="l", ylab="Money ($1e+09)", 
+#     xlab='Date', xlim = c(as.Date("2010-03-01","%Y-%m-%d"), as.Date("2010-05-01","%Y-%m-%d")), ylim = c(0,1.1*max(moneySupplyData$M2_N.WM)), col='black')
+
 plot(x=moneySupplyData$Time.Period, y=moneySupplyData$M2.WM, 
      main="Seasonally Adjusted Money Supply (M2)", type="l", ylab="Money ($1e+09)", 
      xlab='Date', ylim = c(0,1.1*max(moneySupplyData$M2.WM)), col='black')
