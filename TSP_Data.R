@@ -17,6 +17,7 @@ tspSharePricePlot <- function(periodStartDate, periodEndDate, plotTitle) {
   
   dev.off()
   layout(rbind(1,2), heights=c(7,1)) 
+  
   plot(x=TSPSharePrices$date, y=TSPSharePrices$S.Fund, ylim=c(0,ymax),
        xlim=c(periodStartDate,periodEndDate), type="l", ann=FALSE, xlab='Date', col='black')
   
@@ -24,6 +25,8 @@ tspSharePricePlot <- function(periodStartDate, periodEndDate, plotTitle) {
   points(x=TSPSharePrices$date, y=TSPSharePrices$G.Fund, col='purple', type='l', lwd=2)
   points(x=TSPSharePrices$date, y=TSPSharePrices$I.Fund, col='orange', type='l', lwd=2)
   points(x=TSPSharePrices$date, y=TSPSharePrices$L.2050, col='red', type='l', lwd=2)
+  
+  # TODO: Display months on x axis when range < 180 days 
   
   abline(h=seq(0,ymax, 5), col='grey', lwd=0.5)
   
@@ -36,8 +39,7 @@ tspSharePricePlot <- function(periodStartDate, periodEndDate, plotTitle) {
   legend("center", "gropus", c("S-Fund","C-Fund", "G-Fund", "I-Fund", "L-2050"), lty=c(1,1,1,1), lwd=c(2,2,2,2), 
          col=c("black","blue","purple", "orange", "red"), ncol = 5, bty="n")
   
-  datesOfInterest <- as.Date(seq(as.Date("2010-01-01"), length=24, by="1 month") - 1, "%Y-%m-%d")
-  
+  #datesOfInterest <- as.Date(seq(as.Date("2010-01-01"), length=24, by="1 month") - 1, "%Y-%m-%d")
 }
 
 ####### GENERATING TSP RETURNS ######
@@ -87,4 +89,4 @@ minus180Returns <- tspPeriodReturn(minus180, endTime)
 minus365Returns <- tspPeriodReturn(minus365, endTime)
 
 tspSharePricePlot(minus365, endTime, "365 Day Prices")
-#tspSharePricePlot(minus90, endTime, "90 Day Prices")
+#tspSharePricePlot(minus180, endTime, "180 Day Prices")
