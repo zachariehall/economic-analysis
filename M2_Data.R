@@ -1,3 +1,10 @@
+#
+#   Looking at the Federal Reserves Money Supply Data (specifically, M2)
+#   This dataset contains both non-seasonally adjusted and seasonally adjusted
+#   More can be found here: http://www.federalreserve.gov/releases/h6/current/default.htm
+#
+
+
 require(httr)
 require(RCurl)
 

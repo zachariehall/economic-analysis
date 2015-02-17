@@ -37,14 +37,16 @@ endTime <- Sys.Date()
 minus30 <- endTime - 30
 minus60 <- endTime - 60
 minus90 <- endTime - 90
+minus180 <- endTime - 180
+minus365 <- endTime - 365
 
 
 tspPeriodReturn <- function(periodEndDate, periodStartDate) {
   ##### Calculatiing returns based on arbretary dates provided
   # Row that is closest to but not after the date provided  
-  periodEndShares <- TSPSharePrices[which.min(TSPSharePrices$date >= as.Date(periodEndDate)), ]
+  periodEndShares <- TSPSharePrices[which.max(TSPSharePrices$date <= as.Date(periodEndDate)), ]
   
-  periodStartShares <- TSPSharePrices[which.min(TSPSharePrices$date >= as.Date(periodStartDate)), ]
+  periodStartShares <- TSPSharePrices[which.max(TSPSharePrices$date <= as.Date(periodStartDate)), ]
  
   #### Alternatively - we could use the calendar months (maybe overload this function?)
   ### End of the previous month:
@@ -65,3 +67,5 @@ tspPeriodReturn <- function(periodEndDate, periodStartDate) {
 minus30Returns <- tspPeriodReturn(endTime, minus30)
 minus60Returns <- tspPeriodReturn(endTime, minus60)
 minus90Returns <- tspPeriodReturn(endTime, minus90)
+minus180Returns <- tspPeriodReturn(endTime, minus180)
+minus365Returns <- tspPeriodReturn(endTime, minus365)
