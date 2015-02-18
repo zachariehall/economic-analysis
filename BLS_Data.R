@@ -13,6 +13,17 @@ END_YEAR <- as.numeric(format(Sys.Date(), "%Y"))
 UNEMPLOYMENT_SERIES_ID <- c('LNS14000000')
 BLS_API_KEY <- '9ec4fb8261624813883cc86a80847310'
 
+# Use the current date as the end time for analysis 
+curDate <- Sys.Date()
+
+# Dates to represent 30, 60, 90 days from the end Time. 
+minus30 <- curDate - 30
+minus60 <- curDate - 60
+minus90 <- curDate - 90
+minus180 <- curDate - 180
+minus365 <- curDate - 365
+
+
 # if unemploymentData has not been initialized, make it null
 if(!exists("unemploymentData"))
   unemploymentData <- NULL
@@ -63,26 +74,43 @@ unEmploymentSortedDecreasing <- unEmploymentSubData[order(unEmploymentSubData$da
 #qrtMonths = format(unEmploymentSorted$date, '%m') %in% c('01', '04', '07', '10') & format(unEmploymentSorted$date, '%d') == '01'
 qrtMonths = format(unEmploymentSorted$date, '%m') %in% c('01', '07') & format(unEmploymentSorted$date, '%d') == '01'
 
-
-dev.off()
-#plot(unEmploymentSorted$value, type="o", ann=FALSE, xlab='Date', yaxt='n', xaxt='n', col=2)
-plot(x=unEmploymentSorted$date, y=unEmploymentSorted$value, type="l", ann=FALSE, xlab='Date', yaxt='n', xaxt='n', col=2)
-title(ylab="Unemployment Rate (%)")
-
-#axis(1, at=unEmploymentSorted$date[qrtMonths], labels=format(unEmploymentSorted$date[qrtMonths], '%b-%y'))
-axis(1, at=unEmploymentSorted$date[qrtMonths], labels=format(unEmploymentSorted$date[qrtMonths], '%b-%y'),  srt=45, las=2)
-axis(2, las=1)
-abline(v=unEmploymentSorted$date[qrtMonths], col='grey', lwd=0.5)
-
-box()
-
+unemploymentRatePlot <- function(periodStartDate, periodEndDate, plotTitle){
+  
+  #reset any layout settings, etc.
+  dev.off()
+  
+  #plot(unEmploymentSorted$value, type="o", ann=FALSE, xlab='Date', yaxt='n', xaxt='n', col=2)
+  plot(x=unEmploymentSorted$date, y=unEmploymentSorted$value, type="l", ann=FALSE, xlab='Date', yaxt='n', xaxt='n', col=2,
+       xlim=c(periodStartDate,periodEndDate))
+  
+  title(ylab="Unemployment Rate (%)", main = plotTitle)
+  
+  #axis(1, at=unEmploymentSorted$date[qrtMonths], labels=format(unEmploymentSorted$date[qrtMonths], '%b-%y'))
+  axis(1, at=unEmploymentSorted$date[qrtMonths], labels=format(unEmploymentSorted$date[qrtMonths], '%b-%y'),  srt=45, las=2)
+  axis(2, las=1)
+  abline(v=unEmploymentSorted$date[qrtMonths], col='grey', lwd=0.5)
+  
+  box()
+}
 
 employmentRateChange <- function(periodStartDate, periodEndDate){
   
-  periodStartRate <- unEmploymentSortedDecreasing[which.max(unEmploymentSortedDecreasing$date <= as.Date(periodStartDate)), ]$value
-  periodEndRate <- unEmploymentSortedDecreasing[which.max(unEmploymentSortedDecreasing$date <= as.Date(periodEndDate)), ]$value
+  periodStartRate <- unEmploymentSortedDecreasing[which.max(unEmploymentSortedDecreasing$date <= as.Date(periodStartDate)), ]
+  periodEndRate <- unEmploymentSortedDecreasing[which.max(unEmploymentSortedDecreasing$date <= as.Date(periodEndDate)), ]
   
-  periodPercentChange <- (periodEndRate - periodStartRate)/periodStartRate * 100
+  periodPercentChange <- periodEndRate$value - periodStartRate$value
+  
+  print(paste0("Returns for the period of ", periodStartRate$date, " - ", periodEndRate$date, ":"))
+  print(periodPercentChange)
   
   return(periodPercentChange)
 }
+
+#this one doesn't make sense. It will usually be the same month == 0
+#minus30Rate <- employmentRateChange(minus30, curDate)
+minus60Rate <- employmentRateChange(minus60, curDate)
+minus90Rate <- employmentRateChange(minus90, curDate)
+minus180Rate <- employmentRateChange(minus180, curDate)
+minus365Rate <- employmentRateChange(minus365, curDate)
+
+unemploymentRatePlot(minus365, endTime, "365 Day Unemployment")
