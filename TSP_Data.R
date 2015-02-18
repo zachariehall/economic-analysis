@@ -12,6 +12,23 @@ TSPSharePrices <- read.csv(file=TSP_DATA_FILE,head=TRUE,sep=",")
 #TSPSharePrices$date <- as.POSIXlt(TSPSharePrices$date, "%Y-%m-%d")
 TSPSharePrices$date <- as.Date(TSPSharePrices$date, "%Y-%m-%d")
 
+####### SETTING DATE RANGES FOR TSP RETURNS ######
+
+# Use the current date (effectively the last day of the TSP Share Prices data) as the end time for analysis 
+endTime <- Sys.Date()
+
+# Can confirm this works properly by manually setting the date to the end of Jan and comparing the 30 day returns
+# to what is reported for Jan 2015 on the TSP site https://www.tsp.gov/investmentfunds/returns/returnSummary.shtml
+#endTime <- as.Date("2015-01-31")
+
+# Dates to represent 30, 60, 90 days from the end Time. 
+minus30 <- endTime - 30
+minus60 <- endTime - 60
+minus90 <- endTime - 90
+minus180 <- endTime - 180
+minus365 <- endTime - 365
+
+
 tspSharePricePlot <- function(periodStartDate, periodEndDate, plotTitle) {
   ymax = 1.1*max(TSPSharePrices$S.Fund)
   
@@ -30,7 +47,7 @@ tspSharePricePlot <- function(periodStartDate, periodEndDate, plotTitle) {
   
   abline(h=seq(0,ymax, 5), col='grey', lwd=0.5)
   
-  title(ylab="Share Prices ($)", main = plotTitle)
+  title(ylab="Share Price ($)", main = plotTitle)
   
   par(mar=c(0, 0, 0, 0))
   
@@ -42,21 +59,6 @@ tspSharePricePlot <- function(periodStartDate, periodEndDate, plotTitle) {
   #datesOfInterest <- as.Date(seq(as.Date("2010-01-01"), length=24, by="1 month") - 1, "%Y-%m-%d")
 }
 
-####### GENERATING TSP RETURNS ######
-
-# Use the current date (effectively the last day of the TSP Share Prices data) as the end time for analysis 
-endTime <- Sys.Date()
-
-# Can confirm this works properly by manually setting the date to the end of Jan and comparing the 30 day returns
-# to what is reported for Jan 2015 on the TSP site https://www.tsp.gov/investmentfunds/returns/returnSummary.shtml
-#endTime <- as.Date("2015-01-31")
-
-# Dates to represent 30, 60, 90 days from the end Time. 
-minus30 <- endTime - 30
-minus60 <- endTime - 60
-minus90 <- endTime - 90
-minus180 <- endTime - 180
-minus365 <- endTime - 365
 
 
 tspPeriodReturn <- function(periodStartDate, periodEndDate) {

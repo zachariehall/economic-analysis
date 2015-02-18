@@ -8,10 +8,12 @@ require(httr)
 require(RCurl)
 
 START_YEAR <- '2006'
-END_YEAR <- '2014'
+#END_YEAR <- '2015'
+END_YEAR <- as.numeric(format(Sys.Date(), "%Y"))
 UNEMPLOYMENT_SERIES_ID <- c('LNS14000000')
 BLS_API_KEY <- '9ec4fb8261624813883cc86a80847310'
 
+# if unemploymentData has not been initialized, make it null
 if(!exists("unemploymentData"))
   unemploymentData <- NULL
 
@@ -45,20 +47,24 @@ if(is.null(unemploymentData) || START_YEAR != min(unEmploymentSubData$year) || E
   unEmploymentSubData$value <- as.numeric(unEmploymentSubData$value)
   unEmploymentSubData$date <- as.Date(paste("1", unEmploymentSubData$periodName, unEmploymentSubData$year, sep=" "), format = "%d %B %Y")
   
-  #orderRate <- order(unEmploymentSubData$date)
-  unEmploymentSorted <- unEmploymentSubData[order(unEmploymentSubData$date, decreasing = FALSE), ]
-  #reverse it - not good enough... need to sort by date
-  #r_unEmploymentSubData <- unEmploymentSubData[rev(seq_len(nrow(unEmploymentSubData))), ]
 }else{
   print("Skipping BLS query")
   cat('Start Year: ', START_YEAR, '\n')
   cat('End Year: ', END_YEAR, '\n')
 }
 
+# sorted in ascending order for the purpose of plotting
+unEmploymentSorted <- unEmploymentSubData[order(unEmploymentSubData$date, decreasing = FALSE), ]
+
+# sorted decreasing to make it easier on finding periodic info
+unEmploymentSortedDecreasing <- unEmploymentSubData[order(unEmploymentSubData$date, decreasing = TRUE), ]
+
 # Logical vector to grab the quarterly dates
 #qrtMonths = format(unEmploymentSorted$date, '%m') %in% c('01', '04', '07', '10') & format(unEmploymentSorted$date, '%d') == '01'
 qrtMonths = format(unEmploymentSorted$date, '%m') %in% c('01', '07') & format(unEmploymentSorted$date, '%d') == '01'
 
+
+dev.off()
 #plot(unEmploymentSorted$value, type="o", ann=FALSE, xlab='Date', yaxt='n', xaxt='n', col=2)
 plot(x=unEmploymentSorted$date, y=unEmploymentSorted$value, type="l", ann=FALSE, xlab='Date', yaxt='n', xaxt='n', col=2)
 title(ylab="Unemployment Rate (%)")
@@ -70,3 +76,13 @@ abline(v=unEmploymentSorted$date[qrtMonths], col='grey', lwd=0.5)
 
 box()
 
+
+employmentRateChange <- function(periodStartDate, periodEndDate){
+  
+  periodStartRate <- unEmploymentSortedDecreasing[which.max(unEmploymentSortedDecreasing$date <= as.Date(periodStartDate)), ]$value
+  periodEndRate <- unEmploymentSortedDecreasing[which.max(unEmploymentSortedDecreasing$date <= as.Date(periodEndDate)), ]$value
+  
+  periodPercentChange <- (periodEndRate - periodStartRate)/periodStartRate * 100
+  
+  return(periodPercentChange)
+}
